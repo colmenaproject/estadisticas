@@ -1,5 +1,9 @@
+<h1>insert gramos</h1>
+<form action="self" method="POST">
+<input type="submit" value="Enviar"></input>
+</form>
 <?php
-
+/*
 include 'scripts_conf.php';
 /* include for:
 $servername
@@ -15,7 +19,9 @@ if ($conn->connect_error) {
     die("La conexión falló: " . $conn->connect_error);
 } 
 
-$sql = 'INSERT INTO' . $dbprefix . 'est_general (fecha, gramos) VALUES (null, 0)';
+$gramos = calcularGramos();
+
+$sql = 'INSERT INTO' . $dbprefix . 'est_general (fecha, gramos) VALUES (null,' . $gramos . ')';
 //usando "null" como parámetro y current_timestamp en la db
 
 if ($conn->query($sql) === TRUE) {
@@ -26,4 +32,9 @@ if ($conn->query($sql) === TRUE) {
 
 
 $conn->close();
+
+function calcularGramos() {
+	return 100;
+}
+
 ?>
