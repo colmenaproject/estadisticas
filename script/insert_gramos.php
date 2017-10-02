@@ -2,52 +2,64 @@
 
 require 'conf/scripts_conf.php';
 class Estadisticas {
-	private $conn;
-	private $dbprefix;
+   private $conn;
+   private $dbprefix;
+   private $columnas;
+   private $resultados;
 
-	function __construct() {
-		$this->dbprefix = ScriptConf::$dbprefix;	
-	}
+   function __construct() {
+      $this->dbprefix = ScriptConf::$dbprefix;
+      $this->columnas = ['gramos'];
+      $this->resultados = $this->inicializarResultados();   
+   }
 
-	function conectar() {
-		$servername = ScriptConf::$servername;
-		$username = ScriptConf::$username;
-		$password = ScriptConf::$password;
-		$dbname = ScriptConf::$dbname;
+   function inicializarResultados() {
+      foreach($this->columnas as $columna) $this->resultados[$columna] = 0;      
+   }
 
-		$this->conn = new mysqli($servername, $username, $password, $dbname);
-		if ($this->conn->connect_error) {
-			die("La conexión falló: " . $conn->connect_error);
-		} 
-	}
+   function conectar() {
+      $servername = ScriptConf::$servername;
+      $username = ScriptConf::$username;
+      $password = ScriptConf::$password;
+      $dbname = ScriptConf::$dbname;
 
-	function calcularGramosVerificados() {
-		return $this->calcularGramos(1);		
-	}
+      $this->conn = new mysqli($servername, $username, $password, $dbname);
+      if ($this->conn->connect_error)
+         die("La conexión falló: " . $conn->connect_error);
+      
+   }
 
-	function calcularGramos($isVerificado) {
-		$gramos = 0;
-		$sql = 'SELECT SUM( gramos ) as totalGramos
-				FROM ' .$this->dbprefix . 'sistema_iticket
-				WHERE fecha_carga = \'' . date('Y-m-d') . '\'
-				AND estado = ' . $isVerificado . '';
-		if($result = $this->conn->query($sql)) {
-			$row = $result->fetch_assoc();
-			$gramos = $row['totalGramos'];
-		}
-		return $gramos;
-	}
+   function calcular($isVerificado) { 
+      foreach($this->columnas as $columna){ 
+         $sql = 'SELECT SUM( ' . $columna . ' ) as total
+                 FROM ' .$this->dbprefix . 'sistema_iticket
+                 WHERE fecha_carga = \'' . date('Y-m-d') . '\'
+                 AND estado = ' . $isVerificado . '';
+                 if($result = $this->conn->query($sql)) {
+                    $row = $result->fetch_assoc();
+                    $this->resultados[$columna] = $row['total'];
+                 } 
+      }
+   }
 
-	function insertarGramosVerificados() {
-		$gramosVerificados = $this->calcularGramosVerificados();
-		$sql = 'INSERT INTO ' . $this->dbprefix . 'sistema_est_general (fecha, gramos)
-				VALUES (\''. date('Y-m-d') .'\',' . $gramosVerificados . ')';
-		if ($this->conn->query($sql) === TRUE) {
-			echo "Se creó un nuevo registro exitosamente";
-		} else {
-			echo "Error: " . $sql . "<br>" . $this->conn->error;
-		}
-	}
+   function insertar($isVerificado) {
+      $this->calcular($isVerificado);
+      $aInsertar = $this->calcular($isVerificado);
+      $sql = 'INSERT INTO ' . $this->dbprefix . 'sistema_est_general (fecha, ' ;//
+      foreach($this->columnas as $columna){
+         $sql .= $columna . ',';
+      }
+      $sql .= ' estado) VALUES  (\''. date('Y-m-d') .'\',';
+      foreach($this->columnas as $columna){
+         $sql .= $this->resultados[$columna] . ',';
+      }
+      $sql .= ' estado = ' . $isVerificado . ')';
+      if ($this->conn->query($sql) === TRUE) {
+         echo "Se creó un nuevo registro exitosamente\n";
+      } else {
+         echo "Error: " . $sql . "<br>" . $this->conn->error;
+      }  
+   }
 
 }
 

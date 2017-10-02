@@ -5,6 +5,8 @@ require 'insert_gramos.php';
 
 $estadisticas = new Estadisticas();
 $estadisticas->conectar();
-$gramosVerificados = $estadisticas->insertarGramosVerificados();
-
+$estados = [0, 1];
+foreach($estados as $isVerificado) {
+	$estadisticas->insertar($isVerificado);	
+}
 ?>
