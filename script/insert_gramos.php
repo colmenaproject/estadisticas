@@ -1,6 +1,6 @@
 <?php
 
-require 'scripts_conf.php';
+require 'conf/scripts_conf.php';
 class Estadisticas {
 	private $conn;
 
