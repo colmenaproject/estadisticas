@@ -37,7 +37,7 @@ class Estadisticas {
                  AND estado = ' . $isVerificado . '';
                  if($result = $this->conn->query($sql)) {
                     $row = $result->fetch_assoc();
-                    $this->resultados[$columna] = $row['total'];
+                    $this->resultados[$columna] = $row['total'] ? : 0;
                  } 
       }
    }
