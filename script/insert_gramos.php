@@ -25,7 +25,7 @@ class Estadisticas {
 
       $this->conn = new mysqli($servername, $username, $password, $dbname);
       if ($this->conn->connect_error)
-         die("La conexión falló: " . $conn->connect_error);
+         die("La conexión fall&oacute;: " . $conn->connect_error);
       
    }
 
@@ -54,7 +54,7 @@ class Estadisticas {
       }
       $sql .= $isVerificado . ')';
       if ($this->conn->query($sql) === TRUE) {
-         echo "Se creó un nuevo registro exitosamente\n";
+         echo "Se cre&oacute un nuevo registro exitosamente\n";
       } else {
          echo "Error: " . $sql . "<br>" . $this->conn->error;
       }  
