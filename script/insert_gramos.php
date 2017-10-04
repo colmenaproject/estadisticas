@@ -34,7 +34,7 @@ class Estadisticas {
          $sql = 'SELECT SUM( ' . $columna . ' ) as total
                  FROM ' .$this->dbprefix . 'sistema_iticket
                  WHERE fecha_carga = \'' . date('Y-m-d') . '\'
-                 AND estado = ' . $isVerificado . '';
+                 AND verificado = ' . $isVerificado . '';
                  if($result = $this->conn->query($sql)) {
                     $row = $result->fetch_assoc();
                     $this->resultados[$columna] = $row['total'] ? : 0;
@@ -43,17 +43,16 @@ class Estadisticas {
    }
 
    function insertar($isVerificado) {
-      $this->calcular($isVerificado);
       $aInsertar = $this->calcular($isVerificado);
       $sql = 'INSERT INTO ' . $this->dbprefix . 'sistema_est_general (fecha, ' ;//
       foreach($this->columnas as $columna){
          $sql .= $columna . ',';
       }
-      $sql .= ' estado) VALUES  (\''. date('Y-m-d') .'\',';
+      $sql .= ' verificado) VALUES  (\''. date('Y-m-d') .'\',';
       foreach($this->columnas as $columna){
          $sql .= $this->resultados[$columna] . ',';
       }
-      $sql .= ' estado = ' . $isVerificado . ')';
+      $sql .= $isVerificado . ')';
       if ($this->conn->query($sql) === TRUE) {
          echo "Se creó un nuevo registro exitosamente\n";
       } else {
