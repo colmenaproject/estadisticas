@@ -9,7 +9,9 @@ class Estadisticas {
 
    function __construct() {
       $this->dbprefix = ScriptConf::$dbprefix;
-      $this->columnas = ['gramos'];
+      $this->columnas = ['gramos']; 
+      /*Array con los nombres de las columnas de las cuales se desea calcular e insertar un total. 
+      Funciona sobre la tabla iticket. TODO: hacer que la tabla también sea parámetro*/
       $this->resultados = $this->inicializarResultados();   
    }
 
