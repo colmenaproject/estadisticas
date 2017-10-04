@@ -34,7 +34,7 @@ class Estadisticas {
          $sql = 'SELECT SUM( ' . $columna . ' ) as total
                  FROM ' .$this->dbprefix . 'sistema_iticket
                  WHERE fecha_carga = \'' . date('Y-m-d') . '\'
-                 AND verificado = ' . $isVerificado . '';
+                 AND estado = ' . $isVerificado . '';
                  if($result = $this->conn->query($sql)) {
                     $row = $result->fetch_assoc();
                     $this->resultados[$columna] = $row['total'] ? : 0;
