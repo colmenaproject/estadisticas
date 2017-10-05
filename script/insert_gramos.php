@@ -56,10 +56,11 @@ class Estadisticas {
       }
       $sql .= $isVerificado . ')';
       if ($this->conn->query($sql) === TRUE) {
-         echo "Se cre&oacute un nuevo registro exitosamente\n";
+         $msgVerificado = ($isVerificado)? "verificados" : "no verificados";
+         echo "Hoy " . $hoy . ", se registraron " . $this->resultados[$columna] . " $columna $msgVerificado<br/>";   
       } else {
-         echo "Error: " . $sql . "<br>" . $this->conn->error;
-      }  
+         echo "Error: " . $sql . "<br/>" . $this->conn->error;
+      }   
    }
 
 }
